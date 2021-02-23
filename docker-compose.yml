@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+
+  redis:
+    image: library/redis:6.0.10-alpine
+    hostname: redis
+    ports:
+      - 6369:6369
+    networks:
+      - my_network
+
+  demo-service-1:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: app
+    hostname: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+    networks:
+      - my_network
+
+  demo-service-2:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: app
+    hostname: app
+    ports:
+      - "8081:8080"
+    depends_on:
+      - redis
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
